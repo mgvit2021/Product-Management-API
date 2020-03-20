@@ -3,11 +3,19 @@
 This is a generalized Product Management API that can be integrated with an application for ease in product management. 
 It can be used for management of products that belong to, single category (like a pharmacy store) or multiple categories (like ebay).  
 
+## Project Description
 
+The project consists of two main files : app.js and MainClass.js. The app.js includes all route definitions and error handler functions.  
+The MainClass.js consists of four classes:
+* **ErrorWithStatusCode** : Inherits Error class and handle exceptions in the API.
 
----
+* **Validator** : This class consists of methods, that are used for input validation using JOI Schema.
 
-## Features
+* **Category** : Category class includes all the category information and methods required for various operations.
+
+* **Product** : Product class includes all product details and methods that are required for various operations.
+
+## Key Features
 
 * Basic CRUD functionalities of get, add, modify or remove products/categories. 
 
