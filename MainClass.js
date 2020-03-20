@@ -16,7 +16,7 @@ class Category{
         this.id = Category.count;
         this.name = name.toLowerCase();
         this.parent = parentCategory ? parentCategory : 'root';
-        this.gst = gst ? gst : GST;
+        this.gst = gst ? gst : this.parent.gst ? this.parent.gst : GST;
         this.products=[];
         this.subCategories=[];
         if(parentCategory){
@@ -107,8 +107,8 @@ class Product{
         this.brand = brand.toLowerCase();
         this.basePrice = basePrice;
         this.category = category; //complete category object
-        this.categoryId = category.id;
-        this.categoryName = category.name.toLowerCase();
+        this.category_id = category.id;
+        this.category_name = category.name.toLowerCase();
         this.inStock = inStock;
         this.tax = category.gst;
         this.details = details ? details : {};
@@ -133,8 +133,8 @@ class Product{
             'name' : this.name,
             'brand' : this.brand,
             'basePrice' : this.basePrice,
-            'categoryId' : this.categoryId,
-            'categoryName' : this.category.name,
+            'category_id' : this.category_id,
+            'category_name' : this.category.name,
             'details': this.details,
             'tax': this.tax,
             'inStock' : this.inStock,
@@ -149,17 +149,17 @@ class Product{
 
     getInvoice(){
         let prodId = this.id+'';
-        let catId = this.categoryId+'';
+        let catId = this.category_id+'';
         let uid = catId.padStart(3,0) + prodId.padStart(3,0);
-        let prodSKU = this.categoryName+'-'+uid;
+        let prodSKU = this.category_name+'-'+uid;
         this.prodSKU = prodSKU;
         let productInvoice = {
             'prodSKU': this.prodSKU,
             'name' : this.name,
             'brand' : this.brand,
             'basePrice' : this.basePrice,
-            'categoryId' : this.categoryId,
-            'categoryName' : this.category.name,
+            'category_id' : this.category_id,
+            'category_name' : this.category.name,
             'details': this.details,
             'tax': this.tax,
         };
@@ -170,7 +170,7 @@ class Product{
     async updateCategory(newCategory){
         await this.category.removeProduct(this.id); //remove from old category
         newCategory.addProduct(this.id); // add to updated category
-        this.categoryId = newCategory.id;
+        this.category_id = newCategory.id;
         this.category = newCategory;
     }
     

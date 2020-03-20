@@ -52,19 +52,21 @@ const endPoints={
     "product_url" : '/products/{prodId}',
     "sort_products" : '/products/sort',
     "filter_products" : '/products/filter',
+    "search_products_url": '/products/search',
     "product_invoice": '/products/{prodId}/get-invoice',
-    "categories-collection" : '/categories',
-    "category-url" : '/categories/{catId}',
-    "category-products-url" : '/categories/{catId}/products',
-    "sub-categories-url" : '/categories/{catId}/sub-categories',
+    "categories_collection" : '/categories',
+    "category_url" : '/categories/{catId}',
+    "category_products_url" : '/categories/{catId}/products',
+    "sub_categories_url" : '/categories/{catId}/sub-categories',
 }
-var root = new Category('root');
-var stationery=new Category('stationery',root,5);
-var electronics=new Category('electronics',root,8);
-var books=new Category('books',stationery,15);
-var homeAppliances = new Category('homeAppliances',electronics,5);
-
-const categoryStore=[root,stationery,electronics,books,homeAppliances];
+const root = new Category('root');
+const stationery=new Category('stationery',root,5);
+const electronics=new Category('electronics',root,18);
+const mens_clothing = new Category('mens_clothing',root,10);
+const books=new Category('books',stationery,5);
+const laptops = new Category('laptops',electronics);
+const mobiles = new Category('mobiles',electronics);
+const categoryStore=[root,stationery,electronics,mens_clothing,books,laptops,mobiles];
 
 /*var categorySamples={
     '1':stationery,
@@ -73,10 +75,16 @@ const categoryStore=[root,stationery,electronics,books,homeAppliances];
 }*/
 
 
-var productStore=[
-    new Product('Pencil','Natraj',1000,stationery,200,{color:'green', discount:50}),
-    new Product('Book','New Brand',500,books,200),
-    new Product('Laptop','Asus',10000,electronics,50,{discount:3})
+const productStore=[
+    new Product('Classmate Spiral','Classmate',250,stationery,200,{discount:50,delivery:'available',color:'blue',extra:'buy 10 get 2 free'}),
+    new Product('Think Like a Monk','Jay Shetty',473,books,200,{publisher:'Thorsons', ISBN:'0008386595',language:'English'}),
+    new Product('HP Envy Core i5 10th Gen','HP',60000,laptops,50,{discount:2,color:'silver',ram:'8 GB DDR4 RAM',warranty:'1 year',processor:'Intel',os:'Windows 10'}),
+    new Product('IPhone 11 Pro Max','Apple',110000,mobiles,200,{color:'silver',waterproof:'yes',ram:'8GB',memory:[64,128,256]}),
+    new Product('OnePlus 6T','OnePlus',35000,mobiles,200,{color:'black',waterproof:'yes',ram:'8GB',memory:[128,256]}),
+    new Product("Allen Solly Men's Polo",'Allen Solly',1020,mens_clothing,200,{color:'black',sizes:[40,42,44,46],fit:'regular'}),
+    new Product("Levi's Men Slim Fit Stretchable Jeans",'Levis',3399,mens_clothing,10,{color:'black',size:[28,30,32,34],fit:'slim',material:'cotton'}),
+
+
 ];
 
 
@@ -226,6 +234,7 @@ app.get('/products/filter',(req,res)=>{
     }
 });
 
+
 app.get('/products/search',(req,res)=>{
 
     // using regex to return products if some match is there with the query name
@@ -260,7 +269,7 @@ app.get('/products/search',(req,res)=>{
     }
 });
 
-//CHECK BEFORE DEPLOYING
+
 app.get('/products/:prodId',(req,res)=>{
     
     let prodId= req.params.prodId;
@@ -380,7 +389,6 @@ app.get('/products/:prodId/get-invoice',(req,res)=>{
 
 
 /* Categories */
-
 app.get('/categories',(req,res)=>{
     
         let allCategories=[]
@@ -393,6 +401,7 @@ app.get('/categories',(req,res)=>{
         });
 }); 
 
+/* create a category */
 app.post('/categories',(req,res)=>{
 
     var {error,value} = validate.createdCategory(req.body);    
@@ -428,6 +437,7 @@ app.post('/categories',(req,res)=>{
 
 }); 
 
+/* fetch a category */
 app.get('/categories/:catId',(req,res)=>{
     
     let catId= req.params.catId;
@@ -446,6 +456,7 @@ app.get('/categories/:catId',(req,res)=>{
     }  
 });
 
+/* update category */
 app.put('/categories/:catId',(req,res)=>{
     
     let catId= req.params.catId;
@@ -568,6 +579,7 @@ app.get('/categories/:catId/products',(req,res)=>{
     }
 });
 
+/* get sub-categories of the category */
 app.get('/categories/:catId/sub-categories',(req,res)=>{
     let catId = req.params.catId;
     category = categoryStore.find(cat => cat.id == catId);
@@ -595,6 +607,7 @@ app.get('/categories/:catId/sub-categories',(req,res)=>{
     }
 }); 
 
+/* mark all other routes as invalid */
 app.all('/*',(req,res)=>{
     return sendErrorResponse(400,messages['invRoute'],res);
 });
