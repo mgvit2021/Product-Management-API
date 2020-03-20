@@ -1,7 +1,8 @@
 # Product Management API - Final submission VAP
 
 This is a generalized Product Management API that can be integrated with an application for ease in product management. 
-It can be used for management of products that belong to, single category (like a pharmacy store) or multiple categories (like ebay).  
+It can be used for management of products that belong to, single category (like a pharmacy store) or multiple categories (like ebay). 
+The API is written using `Node.js` and `Express.js` and is documented using `OAS 3.0` or `swagger`
 
 ## Project Description
 
@@ -15,6 +16,10 @@ The *MainClass.js* consists of four classes:
 * **Category** : Category class includes all the category information and methods required for various operations.
 
 * **Product** : Product class includes all product details and methods that are required for various operations.
+
+Categories are arranged in tree-like data structure. **Root category** is the base category and is not accessible. Each category can have multiple sub-categories (child nodes). Categories can be updated and deleted. Child-nodes of the deleted category will become child of it's parent.
+
+Product, when created must belong to a category and contain all valid product info. Extra details can also be added to the product object. Products support operations like sort, filter and search. Product invoice can also be fetched, consisting of the product SKU and complete price-breakdown.
 
 ## Key Features
 
