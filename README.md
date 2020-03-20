@@ -34,38 +34,34 @@ npm install
 ---
 
 ## Features
-- Registration and Login
-- Course Add/Drop
-- Explore course catalog
-- Course details
-- Publish new courses  
 
-#### Database Files -data/
-- Users : *Student details database*
-- Professor : *Professor details database*
-- Courses : *Course details database*  
+* Basic CRUD functionalities of get, add, modify or remove products/categories. 
 
-#### Class files
-- FileDataOperationsClass : *Supports all file related operations*
-- UpdateFileClass : *Supports functions of writing to course database* 
+* Products support extra functionalities like sort, filter and search. These can be helpful if API is integrated into an application.
+
+* Product search is dynamic and can display products which match even some part of query.
+
+* Categories are placed in a tree-like data-structure. If deleted, child categories of the root will move one level up in the tree.
+
+* API follows the [RESTful architecture](https://restfulapi.net/)
 
 #### API all endpoints:
- - Home
-  * ***/*** : Home page 
- - Categories
-  * ***/categories*** : Login Page
-  * ***/categories/{catId}*** : Register Page 
-  * ***/categories/{catId}/products*** : Student dashboard consisting of registered courses.
-  * ***/categories/{catId}/sub-categories*** : Professor dashboard consisting of published  courses.
- - Products
-  * ***/products*** : Creating and publishing a course.
-  * ***/products/{prodId}*** : Editing a previously published course 
-  * ***/products/sort*** : Explore all courses available in the catalog.
-  * ***/products/filter*** : Gets details of the particular course.
-  * ***/products/search*** : Displays the filtered list of courses w.r.t domain.
-  * ***/products/{prodId}/get-invoice*** : Gets details of the particular course.
- - Invalid Routes
-  * ***/\**** : Creating and publishing a course.
+- **Home:**
+  * ***/*** : Home page, returns basic api details with all resource_urls
+- **Categories:**
+  * ***/categories*** : Create a new category or fetch all existing categories. Supports [GET,POST].
+  * ***/categories/{catId}*** : Fetch, update or delete a category. Suppots [GET,PUT,DELETE]
+  * ***/categories/{catId}/products*** : Returns a list of all products under particular category.
+  * ***/categories/{catId}/sub-categories*** : Returns a list of all child-categories under particular category.
+- **Products:**
+  * ***/products*** : Add a new product or fetch all existing products. Supports [GET,POST].
+  * ***/products/{prodId}*** : Fetch, update or delete a products. Suppots [GET,PUT,DELETE].
+  * ***/products/sort*** : Returns list of products in sorted order w.r.t sort_by and sort_order(asc/desc) query params.
+  * ***/products/filter*** : Returns filtered list of products w.r.t filter params passed in the query.
+  * ***/products/search*** : Supports dynamic search of products by name/ brand. Regex is used to return products even with slightest match.
+  * ***/products/{prodId}/get-invoice*** : Get product invoice with product-SKU, billDetails and all details of product.
+- **Invalid:**
+  * ***/\**** : All invalid routes are handled by error response.
 
 
 >[Mridul Gupta](https://www.linkedin.com/in/mridul-gupta2021/)
