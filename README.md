@@ -4,7 +4,7 @@ This is a generalized Product Management API that can be integrated with an appl
 It can be used for management of products that belong to, single category (like a pharmacy store) or multiple categories (like ebay). 
 The API is written using `Node.js` , `Express.js` and is documented using `OAS 3.0` or `swagger`
 
-[Swagger Hub Documentation](https://app.swaggerhub.com/apis/mgvit2021/ProductManagementSystemAPI/1.0.0)
+**[Swagger Hub Documentation Link]**(https://app.swaggerhub.com/apis/mgvit2021/ProductManagementSystemAPI/1.0.0)
 
 
 ### Installation
