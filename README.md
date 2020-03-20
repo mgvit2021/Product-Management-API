@@ -25,7 +25,7 @@ Product, when created must belong to a category and contain all valid product in
 
 * Basic CRUD functionalities of get, add, modify or remove products/categories. 
 
-* Products support extra functionalities like sort, filter and search. These can be helpful if API is integrated into an application.
+* Products support extra functionalities like sort, filter and search. These can be helpful when API is integrated into an application.
 
 * Product search is dynamic and can display products which match even some part of query.
 
