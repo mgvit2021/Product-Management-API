@@ -5,8 +5,9 @@ It can be used for management of products that belong to, single category (like 
 
 ## Project Description
 
-The project consists of two main files : app.js and MainClass.js. The app.js includes all route definitions and error handler functions.  
-The MainClass.js consists of four classes:
+The project consists of two main files : **app.js** and **MainClass.js**. The *app.js* file includes all route definitions and error handler functions.  
+The *MainClass.js* consists of four classes:
+
 * **ErrorWithStatusCode** : Inherits Error class and handle exceptions in the API.
 
 * **Validator** : This class consists of methods, that are used for input validation using JOI Schema.
