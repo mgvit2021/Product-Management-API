@@ -1,0 +1,959 @@
+openapi: 3.0.0
+info:
+  version: '1.0.0'
+  title: 'Product Management API'
+  description: >
+    # Welcome!
+
+    This is a generalized Product Management API that can be integrated with an application for ease in product management.  
+    
+    It can be used for management of products that belong to, single category (like a pharmacy store) or multiple categories (like ebay).  
+
+    ___
+    
+    ### Functions:
+
+    * Basic CRUD functionalities of get, add, modify or remove products / categories. 
+    
+
+    * Products support extra functionalities like sort, filter and search. These can be helpful if API is integrated into an application.
+
+    * Product search is dynamic and can display products which match even some part of query.
+
+    * Categories are arranged in a tree-like data-structure. If deleted, child categories of the root will move one level up in the tree.
+
+    * API follows the [RESTful architecture](https://restfulapi.net/)
+
+  contact:
+    name: Mridul Gupta
+    email: mridul.gupta2021@gmail.com
+    url: http://example.com/support
+  # Name of the license and a URL to the license description.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  # Link to the external documentation (if any).
+  # Code or documentation generation tools can use description as the text of the link. 
+  externalDocs:
+    description: Find out more
+    url: http://example.com
+servers:
+# Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/mgvit2021/ProductManagementSystemAPI/1.0.0
+  - description: Heroku test server for the API.
+    url: https://agile-wildwood-62300.herokuapp.com/
+tags:
+  - name: Home
+    description: Entry route to api.
+  - name: Category Routes
+    description: Add, modify or remove categories.
+  - name: Product Routes
+    description: Add, modify or remove products.
+  - name: Category Operations
+    description: Get products or sub-categories of a category.
+  - name: Product Operations
+    description: Get invoice, sort products, filter products or search products.
+  - name: Invalid Route
+    description: Invalid operation or invalid route.
+
+security:
+  - ApiKeyAuth: []
+paths:
+  /:
+    get:
+      summary: Basic api details.
+      tags:
+        - Home
+      description: >
+        **Returns an object consisting basic details of the api along with all the resource urls of the api.**
+      responses:
+        '200':
+          description: Success operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  api_version:
+                    type: string
+                  api_name:
+                    type: string
+                  api_description:
+                    type: string
+                  navigator:
+                    type: object
+                    properties:
+                      resource_url:
+                        type: string
+                        format: uri
+        '400':
+          description: Some error
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+  
+  /products:
+    get:
+      summary: Get all the products available.
+      tags:
+        - Product Routes
+      operationId: getAllProducts
+      description: >
+        **Get information about all the products from the store. Returns an object with status and products list.**
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductResponse'
+        '400':
+          description: Error while fetching products.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+        '401':
+           $ref: "#/components/responses/UnauthorizedError"
+    post:
+      summary: Adding a new product to the store.
+      description: Creating a new product.
+      operationId: createProduct
+      tags:
+        - Product Routes
+      requestBody:
+        description: Product information can be added through body as json-object or through form (if used) as well.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostProduct'
+          # application/x-www-form-urlencoded:
+          #   schema:
+          #     $ref: '#/components/schemas/PostProduct'
+      responses:
+        '201':
+          description: 'Successfully created a new employee object'
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/MessageResponse'
+                properties:
+                  value:
+                    $ref: '#/components/schemas/PostCategory'
+                  links:
+                     $ref: '#/components/schemas/LinkDescription'
+                  
+                  
+        '400':
+          description: An error while creating the product
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/MessageResponse'
+        '404':
+          description: Resource not found error
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/MessageResponse'
+        '401':
+           $ref: "#/components/responses/UnauthorizedError"
+           
+  /products/sort:
+    get:
+      summary: Sort products collection.
+      description: >
+        **Products can be sorted by base-price, discount and date-added. Sort order defines the order in which you want to display the products.**
+      operationId: sortProducts
+      tags:
+        - Product Operations
+      parameters: 
+        - in: query
+          name: sort_by
+          description: Parameter by which you want the collection to be sorted. 
+          schema:
+            type: string
+            enum:
+              - basePrice
+              - discount
+              - created
+          required: true
+        - in: query
+          name: sort_order
+          description: Order in which you want the results to be displayed.
+          schema:
+            type: string
+            enum: 
+              - asc
+              - desc
+            description: >
+              Sort order:
+               * `asc` - Ascending, from A to Z
+               * `desc` - Descending, from Z to A
+          required: true
+      responses:
+        '200':
+          description: All the products are returned in given sorted order.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductResponse'
+        '400':
+          description: Operation unsuccesfull due to bad query formation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+                
+  /products/filter:
+    get:
+      summary: Filters the products based on multiple query parameters.
+      description: >
+        **Fetches all the products filtered by query parameters(Requires atleast one query parameter). Returns an object with status and list of products.**
+      operationId: filterProducts
+      tags:
+        - Product Operations
+      parameters: 
+        - in: query
+          name: brand
+          description: Product brand
+          schema:
+            type: string
+        - in: query
+          name: category_name
+          description: Product category
+          schema:
+            type: string
+        - in: query
+          name: color
+          description: Product color
+          schema:
+            type: string
+        - in: query
+          name: outOfStock
+          description: Available products
+          schema:
+            type: boolean
+
+      responses:
+        '200':
+          description: Returns filtered products.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductResponse'
+        '400':
+          description: Operation unsuccesfull due to bad query formation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+        '404':
+          description: No products returned.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+
+  /products/search:
+    get:
+      summary: Search products by their name or by brand.
+      description: >
+        **Returns list of the products with the given name/brand, even if some match exists (regex match). Can be used with search-bars in applications.**
+      operationId: searchProducts
+      tags:
+        - Product Operations
+      parameters: 
+        - in: query
+          name: name
+          description: Product name
+          schema:
+            type: string
+        - in: query
+          name: brand
+          description: Product brand
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Returns list of matched products.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductResponse'
+        '400':
+          description: Bad query formation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+        '404':
+          description: No matching products found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+
+  /products/{prodId}:
+    get:
+      summary: Get a particular product.
+      description: Returns product details of a product with given id.
+      operationId: getProduct
+      tags:
+        - Product Routes
+      parameters:
+        - in: path
+          name: prodId
+          required: true
+          description: The id of the product
+          schema:
+            type: integer
+            format: int64
+            example: 2
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Product"
+                properties: 
+                  links:
+                    $ref: "#/components/schemas/LinkDescription"
+        '404':
+          description: Product not found (Invalid id).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+        '401':
+           $ref: "#/components/responses/UnauthorizedError"
+    put:
+      summary: Update product details.
+      description: Update product
+      operationId: updateProduct
+      tags:
+        - Product Routes
+      parameters:
+        - in: path
+          name: prodId
+          required: true
+          description: The id of the employee
+          schema:
+            type: integer
+            format: int64
+            example: 2
+      requestBody:
+        description: Product information will be added through body as json-object.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostProduct'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PostProduct'
+      responses:
+        '200':
+          description: Employee updated successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+        '401':
+           $ref: "#/components/responses/UnauthorizedError"
+    delete:
+      summary: Delete a product.
+      description: Delete a product.
+      operationId: deleteProduct
+      tags:
+        - Product Routes
+      parameters:
+        - in: path
+          name: prodId
+          required: true
+          description: The id of the employee
+          schema:
+            type: integer
+            format: int64
+            example: 23
+      responses:
+        '200':
+          description: Product was deleted successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+        '400':
+          description: Product could not be deleted.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+        '401':
+           $ref: '#/components/responses/UnauthorizedError'
+                
+  /products/{prodId}/get-invoice:
+    get:
+      summary: Returns invoice details of a product.
+      tags: 
+        - Product Operations
+      description: Get detailed invoice of the product along with price break-down and product-SKU.
+      operationId: getProductInvoice
+      parameters:
+        - in: path
+          name: prodId
+          required: true
+          description: The id of the employee
+          schema:
+            type: integer
+            format: int64
+            example: 2
+            
+      responses:
+        '200':
+          description: Get product invoice with price break-down.
+          content:
+            application/json:
+              schema:
+                type: object  
+                properties:
+                  status:
+                    type: string
+                  invoice:
+                    type: object
+                    description: Product invoice details.
+                    properties:
+                      prodSKU:
+                        type: string
+                      name:
+                        type: string
+                      brand:
+                        type: string
+                      basePrice:
+                        type: integer
+                        format: int64
+                      category_id:
+                        type: integer
+                        format: int64
+                      category_name:
+                        type: string
+                      details:
+                        type: object
+                      tax:
+                        type: integer
+                        format: int64
+                      billDetails:
+                        type: object
+                        properties:
+                          baseAmt:
+                            type: number
+                            format: double
+                          taxAmt:
+                            type: number
+                            format: double
+                          discountAmt:
+                            type: number
+                            format: double
+                          totalPrice:
+                            type: number
+                            format: double
+                      
+        '404':
+          description: Product not found error (Invalid id).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+      
+                
+  /categories:
+    get:
+      summary: Get all the available categories.
+      tags:
+        - Category Routes
+      description: Get all the categories available.
+      operationId: getAllCategories
+      responses:
+        '200':
+          description: Successfully retrieved all categories.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoryResponse'
+              
+        '401':
+           $ref: "#/components/responses/UnauthorizedError"
+          
+    post:
+      summary: Creates a new category.
+      tags:
+        - Category Routes
+      description: Create a new category by passing details in body as json object.
+      operationId: createCategory
+      requestBody:
+        description: Information about category to be added.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostCategory'
+
+      responses:
+        '201':
+          description: 'Successfully created a new category'
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/MessageResponse'
+                properties:
+                  value:
+                    $ref: '#/components/schemas/PostCategory'
+                  links:
+                     $ref: '#/components/schemas/LinkDescription'
+        '400':
+          description: Error while creating category.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+                
+  /categories/{catId}:
+    get:
+      summary: Get a particular category by Id.
+      tags:
+        - Category Routes
+      operationId: getCategory
+      description: Get category details by fetching a particular category by Id.
+      parameters:
+        - in: path
+          name: catId
+          required: true
+          description: Category id
+          schema:
+            type: integer
+            format: int64
+            example: 3
+            minimum: 1
+            exclusiveMinimum: true
+      responses:
+        '200':
+          description: Successfully fetched the category.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Category'
+                properties:
+                  gst:
+                    description: GST of a category
+                    type: integer
+                    format: int64
+                  totalProducts:
+                    description: Total products available under category
+                    type: integer
+                    format: int64
+                  subCategories:
+                    description: Sub-categories available or not.
+                    type: boolean
+                  links:
+                    $ref: '#/components/schemas/LinkDescription'
+        '400':
+          description: Bad request error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+        '404':
+          description: Category not found error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+                
+    put:
+      summary: Update a particular category, by Id.
+      tags:
+        - Category Routes
+      operationId: updateCategory
+      description: >
+        **Update one or more properties of a category that already exists. Only mention details to be updated, rest will remain the same.**
+      parameters:
+        - in: path
+          name: catId
+          required: true
+          description: Category id
+          schema:
+            type: integer
+            format: int64
+            example: 3
+            minimum: 1
+            exclusiveMinimum: true
+      requestBody:
+        description: Details of the category to be updated.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostCategory'
+      responses:
+        '200':
+          description: Category updated successfully.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/MessageResponse'
+                properties:
+                  links:
+                    $ref: '#/components/schemas/LinkDescription'
+              
+        '400':
+          description: Error in request body.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+        '404':
+          description: Category not found error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+                
+    delete:
+      summary: Delete a category.
+      tags:
+        - Category Routes
+      operationId: deleteCategory
+      description: >
+        **Completely remove a category from the database. On deleting the category, it's sub-categories are not deleted; instead they become child category of the parent of deleted category.**
+      parameters:
+        - in: path
+          name: catId
+          required: true
+          description: Category id
+          schema:
+            type: integer
+            format: int64
+            example: 3
+            minimum: 1
+            exclusiveMinimum: true
+      responses:
+        '200':
+          description: Category deleted successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+              
+        '400':
+          description: Root category cannot be deleted.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+        '404':
+          description: Category not found error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+                
+  /categories/{catId}/products:
+    get:
+      summary: Get products that belong to a particular category.
+      tags:
+        - Category Operations
+      operationId: getCategoryProducts
+      description: >
+        **Returns a list of products that belong to the category of given category id.**
+      parameters:
+        - in: path
+          name: catId
+          required: true
+          description: Category id
+          schema:
+            type: integer
+            format: int64
+            example: 3
+            minimum: 1
+            exclusiveMinimum: true
+      responses:
+        '200':
+          description: >
+            *Category updated successfully.*
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductResponse'
+              
+        '400':
+          description: >
+            *Root access not allowed.*
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+        '404':
+          description: >
+            *Category not found error.*
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+
+  /categories/{catId}/sub-categories:
+    get:
+      summary: Get the sub-categories of a category.
+      tags:
+        - Category Operations
+      description: >
+        **Returns list of child-categories to the category with the given id.**
+      operationId: getSubCategories
+      parameters:
+        - in: path
+          name: catId
+          required: true
+          description: Category id
+          schema:
+            type: integer
+            format: int64
+            example: 3
+            minimum: 1
+      responses:
+        '200':
+          description: >
+            *Successfull operation. Returns list of sub-categories of the given category.*
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoryResponse'
+                
+        '404':
+          description: >
+            *Not found error.*
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+                
+  /*:
+    get:
+      summary: Invalid url
+      description: >
+        **Invalid operation on route / Route not defined.**
+      tags: 
+        - Invalid Route
+      responses:
+        '400':
+          description: Invalid operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+    post:
+      summary: Invalid url
+      description: >
+        **Invalid operation on route / Route not defined.**
+      tags: 
+        - Invalid Route
+      responses:
+        '400':
+          description: Invalid operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+    put:
+      summary: Invalid url
+      description: >
+        **Invalid operation on route / Route not defined.**
+      tags: 
+        - Invalid Route
+      responses:
+        '400':
+          description: Invalid operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+    delete:
+      summary: Invalid url
+      description: >
+        **Invalid operation on route / Route not defined.**
+      tags: 
+        - Invalid Route
+      responses:
+        '400':
+          description: Invalid operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+          
+components:
+
+  schemas:
+
+    Product:
+      type: object
+      description: Product details when fetched.'
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        name:
+          type: string
+        brand:
+          type: string
+        basePrice:
+          type: integer
+          format: int64
+        category_id:
+          type: integer
+          format: int6
+        category_name:
+          type: string
+        details:
+          type: object
+        tax:
+          type: integer
+        inStock:
+          type: integer
+          format: int64
+        outOfStock:
+          type: boolean
+          default: false
+
+    PostProduct:
+      type: object
+      description: 'Model containing product details.'
+      properties:
+        name:
+          type: string
+        brand:
+          type: string
+        basePrice:
+          type: integer
+          format: int64
+        category_name:
+          type: string
+        details:
+          type: object
+        inStock:
+          type: integer
+          format: int64
+          minimum: 0
+      required:
+        - name
+        - brand
+        - basePrice
+        - category_name
+        - inStock
+        
+    ProductResponse:
+      type: object
+      properties:
+        status:
+          type: string
+        products:
+          type: array
+          items:
+            $ref: '#/components/schemas/Product'
+        
+    Category:
+      type: object
+      properties:
+        id:
+          description: Category id.
+          type: integer
+          format: int64
+        name:
+          type: string
+        parent_category:
+          type: string
+          nullable: true
+
+    PostCategory:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the category
+        parent_category:
+          type: string
+          description: Parent category
+        gst:
+          type: integer
+          description: GST defined for all products that belong to the category.
+          format: int64
+      required:
+        - name
+        - parent_category
+
+    CategoryResponse:
+      type: object
+      properties:
+        status:
+          type: string
+        categories:
+          type: array
+          items:
+            $ref: '#/components/schemas/Category'
+      
+    LinkDescription:
+      type: array
+      description: HATEOAS format links for dynamic navigation.
+      items:
+        type: object
+        properties:
+          href:
+            type: string
+            format: uri-reference
+          rel:
+            type: string
+          method:
+            type: string
+            enum:
+              - 'GET'
+              - 'PUT'
+              - 'POST'
+              - 'DELETE'
+
+    MessageResponse:
+      type: object
+      properties:
+        status:
+          type: string
+        message:
+          type: string
+          
+
+
+  responses:
+    UnauthorizedError:
+      description: API key is missing or invalid
+      headers:
+        X-API-KEY:
+          description: Header value
+          schema:
+            type: string
+#No authentication in the test-API yet.
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
