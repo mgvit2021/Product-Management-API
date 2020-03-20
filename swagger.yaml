@@ -94,6 +94,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MessageResponse'
+        '401':
+           $ref: "#/components/responses/UnauthorizedError"
   
   /products:
     get:
@@ -155,15 +157,15 @@ paths:
             application/json:
               schema: 
                 $ref: '#/components/schemas/MessageResponse'
+        '401':
+           $ref: "#/components/responses/UnauthorizedError"
+           
         '404':
           description: Resource not found error
           content:
             application/json:
               schema: 
                 $ref: '#/components/schemas/MessageResponse'
-        '401':
-           $ref: "#/components/responses/UnauthorizedError"
-           
   /products/sort:
     get:
       summary: Sort products collection.
@@ -209,6 +211,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MessageResponse'
+        '401':
+           $ref: "#/components/responses/UnauthorizedError"
                 
   /products/filter:
     get:
@@ -253,6 +257,9 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MessageResponse'
+        '401':
+           $ref: "#/components/responses/UnauthorizedError"
+           
         '404':
           description: No products returned.
           content:
@@ -292,6 +299,9 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MessageResponse'
+        '401':
+           $ref: "#/components/responses/UnauthorizedError"
+
         '404':
           description: No matching products found.
           content:
@@ -326,14 +336,15 @@ paths:
                 properties: 
                   links:
                     $ref: "#/components/schemas/LinkDescription"
+        '401':
+           $ref: "#/components/responses/UnauthorizedError"
+
         '404':
           description: Product not found (Invalid id).
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/MessageResponse'
-        '401':
-           $ref: "#/components/responses/UnauthorizedError"
     put:
       summary: Update product details.
       description: Update product
@@ -465,13 +476,15 @@ paths:
                             type: number
                             format: double
                       
+        '401':
+           $ref: "#/components/responses/UnauthorizedError"
+           
         '404':
           description: Product not found error (Invalid id).
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/MessageResponse'
-      
                 
   /categories:
     get:
@@ -524,6 +537,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MessageResponse'
+        '401':
+           $ref: "#/components/responses/UnauthorizedError"
                 
   /categories/{catId}:
     get:
@@ -571,6 +586,9 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MessageResponse'
+        '401':
+           $ref: "#/components/responses/UnauthorizedError"
+           
         '404':
           description: Category not found error.
           content:
@@ -621,6 +639,9 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MessageResponse'
+        '401':
+           $ref: "#/components/responses/UnauthorizedError"
+           
         '404':
           description: Category not found error.
           content:
@@ -660,6 +681,9 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MessageResponse'
+        '401':
+           $ref: "#/components/responses/UnauthorizedError"
+           
         '404':
           description: Category not found error.
           content:
@@ -702,6 +726,9 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MessageResponse'
+        '401':
+           $ref: "#/components/responses/UnauthorizedError"
+           
         '404':
           description: >
             *Category not found error.*
@@ -736,7 +763,9 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CategoryResponse'
-                
+        '401':
+           $ref: "#/components/responses/UnauthorizedError"
+
         '404':
           description: >
             *Not found error.*
@@ -759,6 +788,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MessageResponse'
+
     post:
       summary: Invalid url
       description: >
