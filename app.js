@@ -1,5 +1,6 @@
 const express = require('express');
 const _ = require('lodash');
+const cors = require('cors');
 const logger = require('morgan');
 const {ErrorWithStatusCode,Validator,Category,Product} = require('./MainClass.js')
 
@@ -16,6 +17,7 @@ var validate = new Validator();
 
 const app = express();
 
+app.use(cors());
 app.use(logger('dev'))
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
@@ -93,7 +95,7 @@ const productStore=[
 
 /* API's entry route, get API details */
 app.get('/',(req,res)=>{
-    res.send({
+    res.status(200).send({
             "api_version": app.locals.api_version,
             "api_name": app.locals.api_name,
             "api_description": app.locals.api_description,
