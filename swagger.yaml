@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
-  version: '1.0.0'
-  title: 'Product Management API'
+  version: 1.0.0
+  title: Product Management API
   description: >
     # Welcome!
 
@@ -39,11 +39,8 @@ externalDocs:
   url: https://github.com/mgvit2021/Product-Management-API
   
 servers:
-# Added by API Auto Mocking Plugin
-  - description: SwaggerHub API Auto Mocking
-    url: https://virtserver.swaggerhub.com/mgvit2021/ProductManagementSystemAPI/1.0.0
-  - description: Heroku test server for the API.
-    url: https://pms-api-v1.herokuapp.com/
+  - url: https://pms-api-v1.herokuapp.com/
+    description: Heroku Test Server for the API.
 tags:
   - name: Home
     description: Entry route to api.
@@ -139,7 +136,7 @@ paths:
           #     $ref: '#/components/schemas/PostProduct'
       responses:
         '201':
-          description: 'Successfully created a new employee object'
+          description: Successfully created a new employee object
           content:
             application/json:
               schema:
@@ -567,6 +564,7 @@ paths:
               schema:
                 allOf:
                   - $ref: '#/components/schemas/Category'
+                type: object
                 properties:
                   gst:
                     description: GST of a category
@@ -842,7 +840,7 @@ components:
 
     Product:
       type: object
-      description: Product details when fetched.'
+      description: Basic Product details.
       properties:
         id:
           type: integer
@@ -873,7 +871,7 @@ components:
 
     PostProduct:
       type: object
-      description: 'Model containing product details.'
+      description: Model containing product details for post.
       properties:
         name:
           type: string
@@ -898,6 +896,7 @@ components:
         - inStock
         
     ProductResponse:
+      description: Product response with status.
       type: object
       properties:
         status:
@@ -909,6 +908,7 @@ components:
         
     Category:
       type: object
+      description: Basic Category details.
       properties:
         id:
           description: Category id.
@@ -922,6 +922,7 @@ components:
 
     PostCategory:
       type: object
+      description: Model containing category details for post.
       properties:
         name:
           type: string
@@ -936,9 +937,11 @@ components:
       required:
         - name
         - parent_category
+        - gst
 
     CategoryResponse:
       type: object
+      description: Categories response with status.
       properties:
         status:
           type: string
@@ -968,6 +971,7 @@ components:
 
     MessageResponse:
       type: object
+      description: Basic message response with status
       properties:
         status:
           type: string
