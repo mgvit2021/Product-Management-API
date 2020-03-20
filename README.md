@@ -50,16 +50,22 @@ npm install
 - UpdateFileClass : *Supports functions of writing to course database* 
 
 #### API all endpoints:
+ - Home
   * ***/*** : Home page 
-  * ***/users/login*** : Login Page
-  * ***/users/register*** : Register Page 
-  * ***/dashboard/student/*** : Student dashboard consisting of registered courses.
-  * ***/dashboard/professor/*** : Professor dashboard consisting of published  courses.
-  * ***/dashboard/professor/add/*** : Creating and publishing a course.
-  * ***/dashboard/professor/edit/*** : Editing a previously published course 
-  * ***/dashboard/explore/*** : Explore all courses available in the catalog.
-  * ***/dashboard/explore/detail*** : Gets details of the particular course.
-  * ***/dashboard/explore/filter*** : Displays the filtered list of courses w.r.t domain.
+ - Categories
+  * ***/categories*** : Login Page
+  * ***/categories/{catId}*** : Register Page 
+  * ***/categories/{catId}/products*** : Student dashboard consisting of registered courses.
+  * ***/categories/{catId}/sub-categories*** : Professor dashboard consisting of published  courses.
+ - Products
+  * ***/products*** : Creating and publishing a course.
+  * ***/products/{prodId}*** : Editing a previously published course 
+  * ***/products/sort*** : Explore all courses available in the catalog.
+  * ***/products/filter*** : Gets details of the particular course.
+  * ***/products/search*** : Displays the filtered list of courses w.r.t domain.
+  * ***/products/{prodId}/get-invoice*** : Gets details of the particular course.
+ - Invalid Routes
+  * ***/\**** : Creating and publishing a course.
 
 
 >[Mridul Gupta](https://www.linkedin.com/in/mridul-gupta2021/)
