@@ -20,29 +20,30 @@ info:
 
     * Product search is dynamic and can display products which match even some part of query.
 
-    * Categories are arranged in a tree-like data-structure. If deleted, child categories of the root will move one level up in the tree.
+    * Categories are placed in a tree-like data-structure. If deleted, child categories of the root will move one level up in the tree.
+    
+    * For security to be added, API-KEY security is added to protect the API from unauthorized users.
 
-    * API follows the [RESTful architecture](https://restfulapi.net/)
+    * This API follows the [RESTful architecture](https://restfulapi.net/)
 
   contact:
     name: Mridul Gupta
     email: mridul.gupta2021@gmail.com
-    url: http://example.com/support
-  # Name of the license and a URL to the license description.
+
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
-  # Link to the external documentation (if any).
-  # Code or documentation generation tools can use description as the text of the link. 
-  externalDocs:
-    description: Find out more
-    url: http://example.com
+
+externalDocs:
+  description: Find out more
+  url: https://github.com/mgvit2021/Product-Management-API
+  
 servers:
 # Added by API Auto Mocking Plugin
   - description: SwaggerHub API Auto Mocking
     url: https://virtserver.swaggerhub.com/mgvit2021/ProductManagementSystemAPI/1.0.0
   - description: Heroku test server for the API.
-    url: https://agile-wildwood-62300.herokuapp.com/
+    url: https://pms-api-v1.herokuapp.com/
 tags:
   - name: Home
     description: Entry route to api.
@@ -935,8 +936,6 @@ components:
           type: string
         message:
           type: string
-          
-
 
   responses:
     UnauthorizedError:
@@ -952,8 +951,3 @@ components:
       type: apiKey
       in: header
       name: X-API-Key
-
-    bearerAuth:
-      type: http
-      scheme: bearer
-      bearerFormat: JWT
