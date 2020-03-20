@@ -58,6 +58,7 @@ tags:
   - name: Invalid Route
     description: Invalid operation or invalid route.
 
+# all routes are secured unless an api-key is added.
 security:
   - ApiKeyAuth: []
 paths:
@@ -575,6 +576,12 @@ paths:
                     description: Total products available under category
                     type: integer
                     format: int64
+                  productsId:
+                    description: List of product id's available under category
+                    type: array
+                    items:
+                      type: integer
+                      example: 2
                   subCategories:
                     description: Sub-categories available or not.
                     type: boolean

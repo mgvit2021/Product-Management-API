@@ -2,8 +2,10 @@
 
 This is a generalized Product Management API that can be integrated with an application for ease in product management. 
 It can be used for management of products that belong to, single category (like a pharmacy store) or multiple categories (like ebay). 
-
 The API is written using `Node.js` , `Express.js` and is documented using `OAS 3.0` or `swagger`
+
+[Swagger Hub Documentation](https://app.swaggerhub.com/apis/mgvit2021/ProductManagementSystemAPI/1.0.0)
+
 
 ### Installation
 
@@ -59,7 +61,7 @@ Product, when created must belong to a category and contain all valid product in
   * ***/categories/{catId}/sub-categories*** : Returns a list of all child-categories under particular category.
 - **Products:**
   * ***/products*** : Add a new product or fetch all existing products. Supports [GET,POST].
-  * ***/products/{prodId}*** : Fetch, update or delete a products. Suppots [GET,PUT,DELETE].
+  * ***/products/{prodId}*** : Fetch, update or delete products. Suppots [GET,PUT,DELETE].
   * ***/products/sort*** : Returns list of products in sorted order w.r.t sort_by and sort_order(asc/desc) query params.
   * ***/products/filter*** : Returns filtered list of products w.r.t filter params passed in the query.
   * ***/products/search*** : Supports dynamic search of products by name/ brand. Regex is used to return products even with slightest match.
