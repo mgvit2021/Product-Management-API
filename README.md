@@ -1,7 +1,5 @@
 # Product Management API - Final submission VAP
 
-## Summary
-
 This is a generalized Product Management API that can be integrated with an application for ease in product management. 
 It can be used for management of products that belong to, single category (like a pharmacy store) or multiple categories (like ebay).  
 
