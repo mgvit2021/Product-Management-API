@@ -5,6 +5,21 @@ It can be used for management of products that belong to, single category (like 
 
 The API is written using `Node.js` , `Express.js` and is documented using `OAS 3.0` or `swagger`
 
+### Installation
+
+Install node js from [here](https://nodejs.org/en/download/)  
+Check by typing this in command prompt.
+```
+node --version
+```
+
+If node is installed, directly copy the package.json file into your project directory and run
+```
+npm install
+```
+
+Run command `npm start` or  `nodemon app` to launch the server.
+
 ## Project Description
 
 The project consists of two main files : **app.js** and **MainClass.js**. The *app.js* file includes all route definitions and error handler functions.  
