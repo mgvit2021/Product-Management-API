@@ -61,7 +61,7 @@ Product, when created must belong to a category and contain all valid product in
   * ***/categories/{catId}/sub-categories*** : Returns a list of all child-categories under particular category.
 - **Products:**
   * ***/products*** : Add a new product or fetch all existing products. Supports [GET,POST].
-  * ***/products/{prodId}*** : Fetch, update or delete a products. Suppots [GET,PUT,DELETE].
+  * ***/products/{prodId}*** : Fetch, update or delete products. Suppots [GET,PUT,DELETE].
   * ***/products/sort*** : Returns list of products in sorted order w.r.t sort_by and sort_order(asc/desc) query params.
   * ***/products/filter*** : Returns filtered list of products w.r.t filter params passed in the query.
   * ***/products/search*** : Supports dynamic search of products by name/ brand. Regex is used to return products even with slightest match.
