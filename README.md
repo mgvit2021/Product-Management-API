@@ -1,34 +1,10 @@
 # Product Management API - Final submission VAP
 
-## Getting Started
+## Summary
 
-Clone or download zip file of the project into your local machine.
+This is a generalized Product Management API that can be integrated with an application for ease in product management. 
+It can be used for management of products that belong to, single category (like a pharmacy store) or multiple categories (like ebay).  
 
-### Dependencies
-
-```
-node v12.14.1
-express v4.16.1
-nodemon v2.0.2
-ejs v2.6.1
-update-json-file v1.1.1
-shortid v2.2.15
-morgan v1.9.1
-lodash v4.17.15
-```  
-
-### Installing
-
-Install node js from [here](https://nodejs.org/en/download/)  
-Check by typing this in command prompt.
-```
-node --version
-```
-
-If node is installed, directly copy the package.json file into your project directory and run
-```
-npm install
-```
 
 
 ---
