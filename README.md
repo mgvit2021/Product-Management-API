@@ -45,7 +45,7 @@ npm install
 
 * API follows the [RESTful architecture](https://restfulapi.net/)
 
-#### API all endpoints:
+## API -all End Points:
 - **Home:**
   * ***/*** : Home page, returns basic api details with all resource_urls
 - **Categories:**
